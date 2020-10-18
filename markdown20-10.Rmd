@@ -1,0 +1,28 @@
+---
+title: "Tarea 20/10"
+author: "Hanna Kenny"
+date: "18 de octubre de 2020"
+output: html_document
+---
+
+#<span style="color:blue">Ejercicio 20/10</span>
+##Convertir en *tidy* una tabla de direcciones
+
+1. Instalamos y prendemos la librería _tidyverse_
+1. Luego importamos el .csv clonando el repositorio de Métodos Cipol a mi entorno.
+
+    `read_csv("C:/Users/hannu/Desktop/MetodosCiPol/docs/Clase05/datos/muestra.csv")`
+
+1. Utilizamos la función _separate_ del paquete "tidyr" para separar el contenido de la única columna en tres para tener la información en formato _tidydata_
+
+    `muestra %>% separate(dire, into = c("calle", "dto", "prov"), sep= ",")`
+
+    Para eso tomo el objeto muestra, coloco la pipa que anida las acciones y a continuación coloco los criterios sobre los cuales quiero que me divida las columnas. En esta función le estoy diciendo "la columna _dire_ separamela en columnas llamadas _calle_, _dto_ y _prov_, cuando haya elementos separados por comas". 
+
+1. Finalmente resta crear un segundo objeto con el nuevo tibble
+    `muestra2 <- muestra %>% separate(dire, into = c("calle", "dto", "prov"), sep=     ",")`
+  
+  
+
+
+
