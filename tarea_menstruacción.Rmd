@@ -1,0 +1,80 @@
+---
+title: "AnÃ¡lisis MenstruacciÃ³n"
+author: "Hanna Kenny"
+date: "24 de octubre de 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#<span style="color:blue">Tarea 26/10: Análisis exploratorio de datos con GGPLOT
+##_MENSTRUACCIÓN_
+
+Primero prendo las librerías 
+
+
+```{r}
+library(tidyverse)
+install.packages("janitor")
+library(janitor)
+```
+
+
+Leo el csv sobre datos de consumo de productos de gestión menstrual y creo un objeto. 
+
+```{r}
+menstruaccion <- 
+readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-12-04/menstruaccion.csv")
+```
+
+```{r}
+menstru2 <- clean_names(menstruaccion)
+```
+
+Selecciono las variables que me interesan: *Categoría*, *precio por unidad* y *región*
+
+```{r}
+menstru3 <- select(menstru2, "categoria", "precio_por_unidad", "region")
+```
+
+Ahora que tengo los datos ordenados, a trabajar sobre la visualización
+
+```{r}
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("ggridges")
+library(ggridges)
+
+```
+
+Para conocer el costo promedio por año de uso de toallitas y tampones por región, armo un gráfico de K Density, una versión suavizada del histograma. 
+
+Primero, a modo de prueba, saco la distribución del precio por unidad. El problema es que esto me toma toallitas y tampones en conjunto. 
+```{r}
+
+ 
+ggplot(data=menstru3, aes(x=precio_por_unidad
+                        )) +
+    geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8)                            
+              
+```
+
+Para separar toallitas de tampones le digo que me llene las densidades de acuerdo a la categoría. Determino como variable x al precio por unidad y como parámetro de relleno a la categoría. De esta manera, me separa la densidad del precio de toallitas y tampones por separado.
+
+```{r}
+ggplot(menstru3, aes(precio_por_unidad, fill= categoria)) + 
+         geom_density(alpha= .3) +
+        labs(x= "Precio por unidad", y= "Distribución")  
+
+```
+
+Ahora resta incorporar la variable región. 
+```{r}
+ggplot(menstru3, aes(x = precio_por_unidad, y = region, fill = categoria, alpha= region)) +
+  geom_density_ridges() 
+  
+```
