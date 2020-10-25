@@ -1,0 +1,74 @@
+
+
+
+
+#Tarea 26/10: Análisis exploratorio de datos con ggplot2
+##<span style="color:violet">_Menstruacción_
+
+Primero prendo las librerías
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+```
+Leo el csv sobre datos de consumo de productos de gestión menstrual y creo un objeto. 
+
+```{r message=FALSE, warning=FALSE, paged.print=TRUE}
+menstruaccion <- 
+readr::read_csv("https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-12-04/menstruaccion.csv")
+```
+
+```{r message=FALSE, warning=FALSE}
+
+menstru2 <- clean_names(menstruaccion)
+```
+
+Selecciono las variables que me interesan: *Categoría*, *precio por unidad* y *región*
+
+```{r message=FALSE, warning=FALSE}
+menstru3 <- select(menstru2, "categoria", "precio_por_unidad", "region")
+
+```
+
+
+Ahora que tengo los datos ordenados, a trabajar sobre la visualización
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)
+library(ggridges)
+
+```
+
+Para conocer la distribución del precio por unidad de productos de gestión menstrual por región, armo un gráfico de K Density, una versión suavizada del histograma. 
+
+Primero, a modo de prueba, saco la distribución del precio por unidad. El problema es que esto me toma toallitas y tampones en conjunto. 
+
+```{r message=FALSE, warning=FALSE}
+
+ggplot(data=menstru3, aes(x=precio_por_unidad
+                        )) +
+    geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8)                      
+```
+
+Para separar toallitas de tampones le digo que me llene las densidades de acuerdo a la categoría. Determino como variable x al precio por unidad y como parámetro de relleno a la categoría.
+
+```{r message=FALSE, warning=FALSE}
+
+ggplot(menstru3, aes(precio_por_unidad, fill= categoria)) + 
+         geom_density(alpha= .3) +
+        labs(x= "Precio por unidad", y= "Distribución")  
+
+```
+
+Ahora resta incorporar la variable región, añadiendolo como variable y. Quería probar si esta opción era posible usando el códico *geom_density* de ggplo2, pero no me devolvía lo mismo que el modelo así que usamos *geom_density_ridges* del paquete ggridges.
+
+```{r message=FALSE, warning=FALSE}
+
+ggplot(menstru3, aes(x = precio_por_unidad, y = region, fill = categoria, alpha= .4)) +
+  geom_density_ridges(scale = 2, bandwidth = 1) +
+  labs(x= "Distribución de precio por unidad", y= "Región") +
+  scale_fill_manual(values = c("pink", "blue"))+
+  facet_wrap(. ~ categoria) 
+
+  
+```
+
